@@ -15,7 +15,7 @@ ts_metrics = 0
 ############################################################################################
 
 # starting value
-@app.route('/')
+@app.route('/index')
 def index():
     return render_template("index.html", aqi=0,
                             aqi_equiv="N/A",
