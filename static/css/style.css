@@ -1,0 +1,70 @@
+html {
+    overflow-y: scroll;
+}
+
+.aqi-container {
+    z-index: -999;
+    text-align: center;
+}
+
+#gauge {
+    margin-top: -20px;
+}
+
+/* AQI */
+.aqi-range {
+    width: 220px;
+    margin-top: -40px;
+}
+
+.min {
+    margin-left: 10px;
+}
+
+.aqi-desc {
+    margin-left: 10px;
+}
+
+.needle {
+    position: absolute;
+    margin-top: -152px;
+    width: 120px;
+    height: 100px;
+    background-color: #343537;
+    border-top-left-radius: 10px;
+    /* border-radius: 10%; */
+    /* clip-path: polygon(50% 0, 50% 0, 52% 100%, 48% 100%); */
+    /* clip-path: polygon(49% 0, 53% 0, 53% 14%, 49% 14%); */
+    clip-path: polygon(48% 0, 52% 0, 52% 15%, 48% 15%);
+    /* clip-path: circle(4.0% at 49% 5%); */
+    /* transform: rotate(-90deg); */
+    transform-origin: bottom center;
+    /* animation: rotate 2s ease-in-out; */
+    z-index: 9;
+}
+
+.aqi {
+    
+    /* margin-top: -110px;  */
+    margin-top: -100px; 
+    width: 20%;
+    height: 0%;
+    z-index: 1;
+    /* background-color: rgba(185, 0, 0, 0.456); */
+}
+
+.spinner{
+    visibility: hidden;
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    top: 50%;
+    left: 50%;
+    margin-left: -25px;
+    margin-top: -50px;
+    z-index: 9999999999999999999999999999;
+}
+
+.pointer-true {
+    cursor: pointer;
+}
