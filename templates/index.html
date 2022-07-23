@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>AQI Monitoring</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap v5.2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css">
+    <!-- Bootswatch Zephyr -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.1.3/dist/zephyr/bootstrap.min.css">
+    <!-- Bootstrap Specific Select Plugin -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid d-flex justify-content-between">
+            <div>
+                <a class="navbar-brand" href="#">Amihan</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor03"
+                    aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+
+            <div class="collapse navbar-collapse" id="navbarColor03">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">AQI Meter</a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li> -->
+                </ul>
+                <div>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#airPollutantsInput">Test</button>
+                    <select class="selectpicker" data-live-search="true">
+                        <option disabled>Select location</option>
+                        <option selected>Baguio City (General)</option>
+                        <option>Session Road</option>
+                        <option>Bonifacio Road</option>
+                        <option>Marcos Highway</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="row my-4 mx-2">
+        <!-- AQI Form for Air Pollutants -->
+        <!-- <div class="col">
+            <form action="aqi" method="POST">
+                <div class="container-fluid">
+                    <h3 class="fw-bold mb-0 pb-0">Air Pollutants</h3>
+                    <small>At least three (3) pollutants are needed. PM2.5 and PM10 is required.</small>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label mt-4">*Particulate Matter 2.5</label>
+                                <input type="number" step="any" id="pm25" name="pm25" class="form-control"
+                                    placeholder="PM2.5 in ug/m3" min="0" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label mt-4">Nitric x-oxide</label>
+                                <input type="number" step="any" id="nox" name="nox" class="form-control"
+                                    placeholder="NOx in ppb" min="0" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label mt-4">Ozone</label>
+                                <input type="number" step="any" id="o3" name="o3" class="form-control"
+                                    placeholder="O3 in ug/m3" min="0" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label mt-4">Sulphur Dioxide</label>
+                                <input type="number" step="any" id="so2" name="so2" class="form-control"
+                                    placeholder="SO2 in ug/m3" min="0" required>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label class="form-label mt-4">*Particulate Matter 10</label>
+                                <input type="number" step="any" id="pm10" name="pm10" class="form-control"
+                                    placeholder="PM10 in ug/m3" min="0" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label mt-4">Ammonia</label>
+                                <input type="number" step="any" id="nh3" name="nh3" class="form-control"
+                                    placeholder="NH3 in ug/m3" min="0" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label mt-4">Carbon Monoxide</label>
+                                <input type="number" step="any" id="co" name="co" class="form-control"
+                                    placeholder="CO in ug/m3" min="0" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2 d-flex justify-content-between">
+                        <div><button type="button" class="btn btn-secondary" id="randBtn">Randomize</button></div>
+                        <div><input type="reset" class="btn btn-danger" value="Reset">
+                            <input type="submit" class="btn btn-primary" id="analyze" value="Analyze">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div> -->
+        <!-- AQI Main Dashboard -->
+        <div class="col">
+            <div>
+                <div class=" container-fluid text-center d-flex flex-column justify-content-center">
+                    <h4 class="fw-bold mb-0 pb-0">Air Quality Index</h4>
+                    <div class="mx-auto">
+                        <canvas id="gauge" width="200" height="200"></canvas>
+                        <div class="needle-container d-flex justify-content-center">
+                            <div class="needle" id="gaugeMarker"><span class="text-danger invisible">needle</span></div>
+                        </div>
+                    </div>
+                    <div class="aqi-container d-flex justify-content-center text-center">
+                        <h1 class="aqi" id="aqi">{{aqi}}</h1>
+                    </div>
+                    <div class="aqi-range mx-auto d-flex justify-content-between p-0">
+                        <p class="min mb-0">0</p>
+                        <h6 class="aqi-desc fw-bold mb-0" id="aqi-desc">{{aqi_equiv}}</h6>
+                        <p class="max mb-0">500</p>
+                    </div>
+                    <div>
+                        <p class="mt-2 mb-3 fw-semibold">Dominant Pollutant - {{recommendations[0][0]}}</p>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <p class="me-3 pt-0 mt-0">RMSE: <span class="text-danger">{{tree_metrics[0]}}</span></p>
+                        <p class="me-3 pt-0 mt-0">MAPE: <span class="text-danger">{{tree_metrics[1]}}</span></p>
+                        <p class="me-3 pt-0 mt-0">R2 Score: <span class="text-danger">{{tree_metrics[2]}}</span></p>
+                    </div>
+                </div>
+
+                <div class="container text-center d-flex flex-column justify-content-center mb-2 pt-3"
+                    data-bs-toggle="modal" data-bs-target="#monthly_zoom">
+                    <div class="mx-auto">
+                        <p class="mb-2">Monthly Forecast</p>
+                        <canvas id="monthly" class="pointer-true" width="500" height="200"></canvas>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <p class="me-3">RMSE: <span class="text-danger">{{ts_metrics[0]}}</span></p>
+                        <p class="me-3">MAE: <span class="text-danger">{{ts_metrics[1]}}</span></p>
+                        <p class="me-3">R2 Score: <span class="text-danger">{{ts_metrics[2]}}</span></p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- Air Pollutants -->
+        <div class="col">
+            <div class="container-fluid d-flex flex-column justify-content-center">
+                <div class="">
+                    <div class="mb-3">
+                        <h4 class="fw-bold mb-0 pb-0">Feedback</h4>
+                    </div>
+
+                    <!-- Alert Feedback -->
+                    <div class="alert alert-{{feedback_type}} d-flex align-items-start" role="alert">
+                        <span class="ps-3 pe-4 py-0"><i class="bi bi-exclamation-triangle-fill"
+                                style="font-size: 1.2rem"></i></span>
+                        <div>
+                            <p class="text-justify p-0 m-0">{{feedback_message}}</p>
+                        </div>
+                    </div>
+
+                    <div class="">
+                        <h5 class="mb-0">Present Pollutants</h5>
+                        <small>You are breathing the following:</small>
+                    </div>
+
+                    <!-- Accordion: Present Pollutants -->
+                    <div class="accordion" id="accordionExample">
+                        {% for i in range(len_r) %}
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading{{i}}">
+                                <button class="accordion-button collapsed w-100" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapse{{i}}" aria-expanded="true" aria-controls="collapse{{i}}">
+                                    <div class="d-flex justify-content-between w-100">
+                                        <div class="fw-bold">{{recommendations[i][0]}}</div>
+                                        <div class="me-3">{{recommendations[i][1]}} µg/m3</div>
+                                    </div>
+                                </button>
+                            </h2>
+                            <div id="collapse{{i}}" class="accordion-collapse collapse" aria-labelledby="heading{{i}}"
+                                data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <strong>Exposure Prevention:</strong>
+                                    <ul>
+                                        {% for l in range(r_list) %}
+                                        <li>{{recommendations[i][2][l]}}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="airPollutantsInput" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <form id="aqiform" action="aqi" method="POST">
+                <div class="modal-content p-4">
+                    <div class="modal-header pt-3 pb-0 align-items-start">
+                        <div>
+                            <h4 class="fw-bold mb-0 pb-0">Air Pollutants</h4>
+                            <small>At least three (3) pollutants are needed. Either PM2.5 or PM10 is required.</small>
+                        </div>
+                        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <div class="modal-body  py-0">
+                        <div class="row mb-3">
+                            <div class="col">
+
+                                <div class="form-group">
+                                    <label class="form-label mt-4">*Particulate Matter 2.5</label>
+                                    <input type="number" step="any" id="pm25" name="pm25" class="form-control"
+                                        placeholder="PM2.5 in ug/m3" min="0" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label mt-4">Nitric x-oxide</label>
+                                    <input type="number" step="any" id="nox" name="nox" class="form-control"
+                                        placeholder="NOx in ug/m3" min="0" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label mt-4">Ozone</label>
+                                    <input type="number" step="any" id="o3" name="o3" class="form-control"
+                                        placeholder="O3 in ug/m3" min="0" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label mt-4">Sulphur Dioxide</label>
+                                    <input type="number" step="any" id="so2" name="so2" class="form-control"
+                                        placeholder="SO2 in ug/m3" min="0" required>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="form-label mt-4">*Particulate Matter 10</label>
+                                    <input type="number" step="any" id="pm10" name="pm10" class="form-control"
+                                        placeholder="PM10 in ug/m3" min="0" required>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label class="form-label mt-4">Ammonia</label>
+                                    <input type="number" step="any" id="nh3" name="nh3" class="form-control"
+                                        placeholder="NH3 in ug/m3" min="0" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label mt-4">Carbon Monoxide</label>
+                                    <input type="number" step="any" id="co" name="co" class="form-control"
+                                        placeholder="CO in ug/m3" min="0" required>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-white d-grid gap-2 d-flex justify-content-between">
+                        <div><button type="button" class="btn btn-secondary" id="randBtn">Randomize</button></div>
+                        <div><input type="reset" class="btn btn-danger" value="Reset">
+                            <input type="submit" class="btn btn-primary" id="analyze" value="Analyze">
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <!-- monthly Zoom -->
+    <div class="modal fade" id="monthly_zoom" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Monthly Forecast</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container text-center d-flex flex-column justify-content-center mb-2">
+                        <div class="mx-auto">
+                            <canvas id="monthly_modal" width="1200" height="550"></canvas>
+                            <div class="d-flex">
+                                <p class="fw-bold me-3">Model Performance Benchmark: </p>
+                                <p class="me-3">RMSE: <span class="text-danger">{{ts_metrics[0]}}</span></p>
+                                <p class="me-3">MAE: <span class="text-danger">{{ts_metrics[1]}}</span></p>
+                                <p class="me-3">R2 Score: <span class="text-danger">{{ts_metrics[2]}}</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="spinner" class="spinner float-center spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+
+
+    <!-- Select Component with Live Search -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+
+    <!-- ChartJS -->
+    <script src="https://unpkg.com/chart.js@2.8.0/dist/Chart.bundle.js"></script>
+    <script src="https://unpkg.com/chartjs-plugin-datalabels@0.7.0/dist/chartjs-plugin-datalabels.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
+
+    <!-- Bootstrap v5.2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+        integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+        integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy"
+        crossorigin="anonymous"></script>
+
+    <!-- Custom Script -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+    <script>
+        // Render the charts
+        // aqi gauge
+        gaugeChart("gauge", gaugeLabels, gaugeDataset);
+        gaugeMarker.style.transform = "rotate(" + gaugeMarkerTheta("{{aqi}}") + "deg)";
+        // time series
+        lineChart("monthly", {{ time_series[0] | tojson }}, {{ time_series[1] | tojson }}, {{ time_series[2] | tojson }});
+        lineChart("monthly_modal", {{ time_series[0] | tojson }}, {{ time_series[1]}}, {{ time_series[2] | tojson }});
+        // spinner
+        document.getElementById("aqiform").addEventListener("submit", function () {
+            document.getElementById("spinner").style.visibility = 'visible';
+        });
+    </script>
+</body>
+
+</html>
