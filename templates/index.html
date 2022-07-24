@@ -140,9 +140,10 @@
                         <p class="mt-2 mb-3 fw-semibold">Dominant Pollutant - {{recommendations[0][0]}}</p>
                     </div>
                     <div class="d-flex justify-content-center">
-                        <p class="me-3 pt-0 mt-0">RMSE: <span class="text-danger">{{RFR_metrics[0]}}</span></p>
-                        <p class="me-3 pt-0 mt-0">MAE: <span class="text-danger">{{RFR_metrics[1]}}</span></p>
-                        <p class="me-3 pt-0 mt-0">R2 Score: <span class="text-danger">{{RFR_metrics[2]}}</span></p>
+                        <p class="me-3 pt-0 mt-0">R2 Score: <span class="text-danger">{{RFR_metrics[0]}}</span></p>
+                        <p class="me-3 pt-0 mt-0">MSE: <span class="text-danger">{{RFR_metrics[1]}}</span></p>
+                        <p class="me-3 pt-0 mt-0">RMSE: <span class="text-danger">{{RFR_metrics[2]}}</span></p>
+                        <p class="me-3 pt-0 mt-0">MAE: <span class="text-danger">{{RFR_metrics[3]}}</span></p>
                     </div>
                 </div>
 
@@ -153,9 +154,9 @@
                         <canvas id="monthly" class="pointer-true" width="500" height="200"></canvas>
                     </div>
                     <div class="d-flex justify-content-center">
+                        <p class="me-3">R2 Score: <span class="text-danger">{{SARIMAX_metrics[2]}}</span></p>
                         <p class="me-3">RMSE: <span class="text-danger">{{SARIMAX_metrics[0]}}</span></p>
                         <p class="me-3">MAPE: <span class="text-danger">{{SARIMAX_metrics[1]}}</span></p>
-                        <p class="me-3">R2 Score: <span class="text-danger">{{SARIMAX_metrics[2]}}</span></p>
                     </div>
                 </div>
 
@@ -310,9 +311,9 @@
                             <canvas id="monthly_modal" width="1200" height="550"></canvas>
                             <div class="d-flex">
                                 <p class="fw-bold me-3">Model Performance Benchmark: </p>
-                                <p class="me-3">RMSE: <span class="text-danger">{{SARIMAX_metrics[0]}}</span></p>
-                                <p class="me-3">MAE: <span class="text-danger">{{SARIMAX_metrics[1]}}</span></p>
                                 <p class="me-3">R2 Score: <span class="text-danger">{{SARIMAX_metrics[2]}}</span></p>
+                                <p class="me-3">RMSE: <span class="text-danger">{{SARIMAX_metrics[0]}}</span></p>
+                                <p class="me-3">MAPE: <span class="text-danger">{{SARIMAX_metrics[1]}}</span></p>
                             </div>
                         </div>
                     </div>
